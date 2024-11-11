@@ -1,0 +1,103 @@
+body {
+  font-family: sans-serif;
+  margin: 25px;
+  color: #222;
+  background-color: #f5f5f5;
+}
+
+.main_container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+label[for] {
+  text-align: right;
+  border-bottom: solid 1px black;
+}
+
+#ProductList {
+  float: left;
+  width: 70%;
+  grid-template-rows: 1fr 1fr;
+}
+
+#addProduct {
+  float: left;
+  width: 26%;
+}
+
+form {
+  display: grid;
+  gap: 1px;
+  grid-template-columns: max-content 1fr;
+  border: solid 3px black;
+  margin-bottom: 25px;
+  padding: 10px;
+  background: linear-gradient(90deg, #e27474, #D5D531, #008000);
+  width: 100%;
+  max-width: 340px;
+  border-radius: 25px;
+  font-size: 15px;
+}
+
+.lab_l {
+  text-align: left;
+}
+
+input {
+  display: block;
+  margin-bottom: 10px;
+  padding: 2px;
+  width: 90%;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+}
+
+input[type=submit] , .btn_form {
+  border-radius: 3px;
+  background-color: #E4F1FE;
+  border: 1px solid grey;
+  cursor: pointer;
+}
+
+input[type=submit]:hover , .btn_form:hover {
+  background-color: #FFFEC4;
+}
+
+input[type=number] {
+  width: 50%;
+}
+
+.btn_form {
+  padding: 5px;
+  border-radius: 8px;
+}
+
+/* Datatables */
+
+td.action {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.searchColumnInput {
+  width: 100%;
+  padding: 3px;
+  box-sizing: border-box;
+}
+
+.paginate_button{
+  padding: .1em 0.5em !important;
+}
+
+#btn_delete {
+  color: red;
+}
+#btn_edit {
+  color: green;
+}
+
+
+
+
+

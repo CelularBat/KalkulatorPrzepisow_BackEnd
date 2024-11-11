@@ -1,0 +1,36 @@
+
+
+var mongoose = require("mongoose");
+require('mongoose-type-url');
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+// SCHEMAS
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+const {userSchema,User} = require('./mongo_schemas/userSchema.js');
+const {foodSchema,Food} = require('./mongo_schemas/foodSchema.js');
+const {recipeSchema,Recipe} = require('./mongo_schemas/recipeSchema.js');
+
+
+const productPortionSchema = new mongoose.Schema({
+      productId: {type: Number, required:true},
+      weight: {type: Number, required:true}
+});
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+// EXPORT
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+module.exports = { mongoose, Food, User, Recipe};

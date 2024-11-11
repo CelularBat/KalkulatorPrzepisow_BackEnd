@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sortable Table</title>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+</head>
+<body>
+
+<table id="dataTable" class="display">
+    <thead>
+        <tr>
+            <th>Author</th>
+            <th>Publication</th>
+            <th>ID</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Table body content will be dynamically generated using JavaScript -->
+    </tbody>
+</table>
+
+<!-- jQuery and DataTables JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+<script>
+    // Your JSON array
+    const jsonArray = [
+        {"author": "test", "publ": false, "_id": "65b156082047261770bfdcfe"},
+        {"author": "te3t", "publ": false, "_id": "65b1563820472hjj70bfdcfe"},
+        {"author": "tw3t", "publ": false, "_id": "65b1563820472hjj70b5dcfe"}
+    ];
+
+    // Populate the table with JSON data
+    const table = $('#dataTable').DataTable({
+        data: jsonArray,
+        columns: [
+            { data: 'author' },
+            { data: 'publ' },
+            { data: '_id' }
+        ]
+    });
+</script>
+
+</body>
+</html>

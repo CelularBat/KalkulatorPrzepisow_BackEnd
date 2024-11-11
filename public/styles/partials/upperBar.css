@@ -1,0 +1,25 @@
+
+
+.nav{
+    background: linear-gradient(to left, #955DFF, #6FAAFF);
+    height: 56px;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width:100%;
+  }
+
+.pg {
+    font-style: italic;
+    color: green;
+    font-weight: bold; /* Make font bolder */
+    font-size: 2vw; /* Twice the normal size */
+    font-family: 'Cursive', 'Segoe Script', 'Brush Script MT', sans-serif; /* Handwriting-style fonts */
+    margin:auto;
+    cursor:grab;
+}
+
+.pg.active{
+  color: yellow;
+  font-size: 2.1vw;
+}

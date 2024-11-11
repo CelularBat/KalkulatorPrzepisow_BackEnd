@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <%- include('partials/head_meta')  -%>
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <link href="https://cdn.datatables.net/v/dt/dt-1.13.8/b-2.4.2/sp-2.2.0/sl-1.7.0/datatables.min.css" rel="stylesheet"> 
+     <script src="https://cdn.datatables.net/v/dt/dt-1.13.8/b-2.4.2/sp-2.2.0/sl-1.7.0/datatables.min.js"></script>
+    <link href="AddProduct.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div id="upperBar"><%- include('partials/upperBar') -%></div>
+
+<div class="main_cointainer">
+    
+
+    
+    <div class="divcol" id="addProduct">
+      <h2> Dodaj produkt:</h2>
+      <div id="addProductForm">
+         <form method="post" action="/api/addp" target="_blank" id="addPrForm">
+            <label for="name">
+              <button class="btn_form" id="btn_cleanForm">Wyczyść</button>&nbsp;&nbsp;*Nazwa: &nbsp;
+            </label>
+            <input type="text" name="name" id="Nazwa" required>
+            <label for="brand">Marka: &nbsp;</label>
+            <input type="text" name="brand" id="Marka">
+            <label for="category">Kategoria: &nbsp;</label>
+            <input type="text" name="category" id="Kategoria">
+            <label for=""><b>Wartość</b></label> <label class="lab_l"><b>&nbsp;energetyczna:</b></label>      
+            <label for="kj">*kj: &nbsp;</label>
+            <input type="number" name="kj" id="kj" required>
+            <label for="kcal">*kcal: &nbsp;</label>
+            <input type="number" name="kcal" id="kcal" required>
+            <label for=""><b>Wartość odżywcza</b></label> <label class="lab_l"><b>&nbsp;w 100g/ml:</b></label>
+            <label for="fat">*Tłuszcze: &nbsp;</label>
+            <input type="number" name="fat" id="Tłuszcz" required step="0.1" required pattern="^\d+(,\d{1})?$">
+            <label for="carb">*Węglowodany: &nbsp;</label>
+            <input type="number" name="carb" id="Węglowodany" required step="0.1" pattern="^\d+(,\d{1})?$">
+            <label for="sugar">*Cukry: &nbsp;</label>
+            <input type="number" name="sugar" id="Cukier" required step="0.1" pattern="^\d+(,\d{1})?$">
+            <label for="protein">*Białko: &nbsp;</label>
+            <input type="number" name="protein" id="Białko" required step="0.1" pattern="^\d+(,\d{1})?$">
+            <label for="salt">*Sól: &nbsp;</label>
+            <input type="number" name="salt" id="Sól" step="0.1" pattern="^\d+(,\d{1})?$">
+            <label for="fiber">Błonnik: &nbsp;</label>
+            <input type="number" name="fiber" id="Błonnik" step="0.1" pattern="^\d+(,\d{1})?$">
+            <label for="public">Dodaj jako publiczne?</label>
+            <input type="checkbox" name="public" id="Publiczny" value="true">     
+        
+            <label for="link">Link do produktu: &nbsp;</label>
+            <input type="text" id="link" name="link">
+            <input type="submit" value="Dodaj" id="btn_add">
+            <input type="submit" value="Potwierdź edycję" id="btn_update" style="display: none;">
+        </form> 
+      </div>
+    </div>
+        
+    
+    <div class="divcol" id="ProductList">
+      
+        <h2> Twoje produkty w bazie danych:</h2>
+        <div id="uList">
+         
+          
+          <table id="dataTable" class="display">
+              <thead>
+                  <tr>
+                      <th>Kategoria</th>
+                      <th>Nazwa</th>
+                      <th>Marka</th>
+                      <th>kj</th>
+                      <th>kcal</th>
+                      <th>Tłu</th>
+                      <th>Węg</th>
+                      <th>Cuk</th>
+                      <th>Bia</th>
+                      <th>Bło</th>
+                      <th>Sól</th>
+                      <th>Pub</th>
+                     
+                  </tr>
+              </thead>
+              <tbody>
+              </tbody>
+              <tfoot>
+                  <tr>
+                      <th>Kategoria</th>
+                      <th>Nazwa</th>
+                      <th>Marka</th>
+                      <th>kj</th>
+                      <th>kcal</th>
+                      <th>Tłu</th>
+                      <th>Węg</th>
+                      <th>Cuk</th>
+                      <th>Bia</th>
+                      <th>Bło</th>
+                      <th>Sól</th>
+                      <th>Pub</th>
+                     
+                  </tr>
+              </tfoot>
+          </table>
+        </div>
+      
+      <div class="divcol" id="publicProductList">
+        <h2> Produkty dodane przez innych użytkowników:</h2>
+        <div id="pList">
+          <table id="dataTablePub" class="display">
+              <thead>
+                  <tr>
+                      <th>Kategoria</th>
+                      <th>Nazwa</th>
+                      <th>Marka</th>
+                      <th>kj</th>
+                      <th>kcal</th>
+                      <th>Tłu</th>
+                      <th>Węg</th>
+                      <th>Cuk</th>
+                      <th>Bia</th>
+                      <th>Bło</th>
+                      <th>Sól</th>
+                      <th>Autor</th>
+                  </tr>
+              </thead>
+              <tbody>
+              </tbody>
+                <tfoot>
+                  <tr>
+                      <th>Kategoria</th>
+                      <th>Nazwa</th>
+                      <th>Marka</th>
+                      <th>kj</th>
+                      <th>kcal</th>
+                      <th>Tłu</th>
+                      <th>Węg</th>
+                      <th>Cuk</th>
+                      <th>Bia</th>
+                      <th>Bło</th>
+                      <th>Sól</th>
+                      <th>Autor</th>
+                     
+                  </tr>
+              </tfoot>
+          </table>
+          
+        </div>
+      </div>
+    </div>
+    
+     
+</div>
+</body>
+<script src="AddProduct.js"></script>
+</html>

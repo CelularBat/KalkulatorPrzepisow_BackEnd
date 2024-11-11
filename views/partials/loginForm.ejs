@@ -1,0 +1,50 @@
+
+<!-- From: https://freefrontend.com/css-login-forms/ -->
+<link href="partials/loginForm.css" rel="stylesheet" type="text/css" />
+
+<div class="container" id="container">
+  <input type="radio" name="tab" id="signin" checked="checked"/>
+  <input type="radio" name="tab" id="register"/>
+
+  <div class="tabs" id="tabs">
+    <label class="tab" for="signin">
+      <div class="text">Zaloguj</div>
+    </label>
+    <label class="tab" for="register">
+      <div class="text">Zarejestruj</div>
+    </label>
+  </div>
+  <div class="pages" id="pages">
+    <div class="page">
+      <div class="input">
+        <div class="title"><i class="material-icons"></i> NAZWA UŻYTKOWNIKA</div>
+        <input class="text" type="text" placeholder="" id="login_log"/>
+      </div>
+      <div class="input">
+        <div class="title"><i class="material-icons"></i> HASŁO</div>
+        <input class="text" type="password" placeholder="" id="password_log"//>
+      </div>
+      <div class="input">
+        <input type="submit" value="WEJDŹ" id="login_submit"/>
+        <div class="title" id="status_log"></div>
+      </div>
+    </div>
+    <div class="page signup">
+      <div class="input">
+        <div class="title"><i class="material-icons"></i> NAZWA UŻYTKOWNIKA</div>
+        <input class="text" type="text" placeholder="" id="login_reg"/>
+      </div>
+      <div class="input">
+        <div class="title"><i class="material-icons"></i> HASŁO</div>
+        <input class="text" type="password" placeholder="" id="password_reg"/>
+      </div>
+      <div class="input">
+        <input type="submit" value="ZAREJESTRUJ!" id="register_submit"/>
+        <div class="title" id="status_reg"></div>
+       
+      </div>
+    </div>
+  </div>
+
+</div>
+<script src="partials/loginForm.js"></script>
