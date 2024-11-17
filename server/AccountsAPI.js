@@ -2,8 +2,6 @@ const bcrypt = require('bcrypt') ;
 const session = require('express-session');
 const log = require('../Logger');
 
-const cors = require('cors');
-
 /* Responce to client:
 {s
   msg: "info message" // ( with error or with normal msg)
@@ -16,29 +14,7 @@ done(<msg>,<status>)
 */
 
 const AccountManagerSetup = (app, User) => {
-    //////////////////////////////////
-    // Session setup  
-    //////////////////////////////////
-    app.use(session({
-      name: 'session-cookie',
-      secret: 'my-secret-key',
-      resave: false,
-      saveUninitialized: true,
-      cookie: {
-        secure: (process.env.NODE_ENV == "DEPLOY"),
-        sameSite: (process.env.NODE_ENV == "DEPLOY")? 'None':'Lax',
-        domain: (process.env.NODE_ENV == "DEPLOY")? process.env.FRONT_URL.replace('https://', '') : undefined
-      }
-    }));
 
-    app.use(
-      cors({
-        origin: (process.env.NODE_ENV == "DEPLOY")? process.env.FRONT_URL :'*' ,
-        credentials: true, // Access-Control-Allow-Credentials (cookies)
-      })
-    );
-  
-    app.set('trust proxy', 1);
   
     // function which check if user is logged in (with every call to server)
     app.use((req, res, next) => {
