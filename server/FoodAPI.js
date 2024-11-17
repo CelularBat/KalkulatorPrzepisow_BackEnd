@@ -1,6 +1,16 @@
 const log = require('../Logger');
 const {c_UnregisteredAccountName} = require('./config');
 
+/* Responce to client:
+{
+  msg: "info message" // ( with error or with normal msg)
+  status: <0=error  1=sucess>
+}
+
+done callback:
+done(<msg>,<status>)
+
+*/
 
 function FoodAPI_Setup(app,Food) {
  
@@ -62,7 +72,7 @@ function FoodAPI_Setup(app,Food) {
       }
       AddProduct(p,(msg,status)=>{
         res.json({msg: msg, status:status});
-        });
+      });
     });
   
   app.post("/api/updatep",(req,res)=>{
@@ -104,6 +114,7 @@ function FoodAPI_Setup(app,Food) {
       Food.find({author:u},(err,user_products)=>{
         if (err) {
           log.error(err);
+          res.json({msg: "Error", status:0}); 
         } else {
           res.json(user_products);    
         }    
@@ -118,6 +129,7 @@ function FoodAPI_Setup(app,Food) {
       Food.find({author:{$ne: u},public:{$ne: false} },(err,products)=>{
         if (err) {
           log.error(err);
+          res.json({msg: "Error", status:0}); 
         } else {
           res.json(products);    
         }    

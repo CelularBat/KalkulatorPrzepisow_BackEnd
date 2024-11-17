@@ -1,18 +1,18 @@
 {
-  "name": "test",
+  "name": "kalkulator_recept_api",
   "author": "CelularBat",
-  "description": "Hjustoen, mamy problem!",
+  "description": "Kalkulator Recept API",
   "keywords": [
-    "dupa",
-    "Romana"
+    "nothing",
+    "here"
   ],
   "license": "MIT",
   "version": "0.9.9",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
-    "ejs": "^3.1.6",
     "express": "^4.16.4",
     "express-session": "^1.17.3",
     "mongoose": "^5.11.15",
@@ -20,8 +20,9 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "start": " node index.js",
+    "dev": " nodemon index.js",
+    "deploy": " nodemon index.js"
   },
   "devDependencies": {
     "nodemon": "^3.0.3"

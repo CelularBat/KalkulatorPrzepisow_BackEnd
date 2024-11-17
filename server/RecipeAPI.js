@@ -98,6 +98,7 @@ function RecipeAPI_Setup(app,Recipe){
         Recipe.find({author:u},(err,user_recipes)=>{
           if (err) {
             log.error(err);
+            res.json({msg: "Error", status:0}); 
           } else {
             res.json(user_recipes);    
           }    
@@ -112,6 +113,7 @@ function RecipeAPI_Setup(app,Recipe){
         Recipe.find({author:{$ne: u},public:{$ne: false} },(err,products)=>{
           if (err) {
             log.error(err);
+            res.json({msg: "Error", status:0}); 
           } else {
             res.json(products);    
           }    
