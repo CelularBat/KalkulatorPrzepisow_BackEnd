@@ -4,8 +4,9 @@ require("dotenv").config();
 
 const express = require("express");
 const app = express();
+
 const cors = require("cors");
-app.use(cors());
+const session = require('express-session');
 
 let bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({
@@ -13,6 +14,30 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(express.json());
 
+  //////////////////////////////////
+  // Session setup  
+  //////////////////////////////////
+  app.use(session({
+    name: 'session-cookie',
+    secret: 'my-secret-key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      secure: (process.env.NODE_ENV == "DEPLOY"),
+      sameSite: (process.env.NODE_ENV == "DEPLOY")? 'None':'Lax',
+      domain: (process.env.NODE_ENV == "DEPLOY")? process.env.FRONT_URL.replace('https://', '') : undefined
+    }
+  }));
+
+  app.use(
+    cors({
+      origin: (process.env.NODE_ENV == "DEPLOY")? process.env.FRONT_URL :'*' ,
+      credentials: true, // Access-Control-Allow-Credentials (cookies)
+    })
+  );
+
+  app.set('trust proxy', 1);
+////////////////////////////////////////////////////////////////////////
 
 
 

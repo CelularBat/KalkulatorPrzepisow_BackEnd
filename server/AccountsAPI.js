@@ -34,7 +34,7 @@ const AccountManagerSetup = (app, User) => {
     app.use(
       cors({
         origin: (process.env.NODE_ENV == "DEPLOY")? process.env.FRONT_URL :'*' ,
-        credentials: true, // Allow credentials (cookies)
+        credentials: true, // Access-Control-Allow-Credentials (cookies)
       })
     );
   
