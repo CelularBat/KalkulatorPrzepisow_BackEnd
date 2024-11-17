@@ -21,18 +21,17 @@ app.use(express.json());
     name: 'session-cookie',
     secret: 'my-secret-key',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: true, 
     cookie: {
       httpOnly: false,
       secure: (process.env.NODE_ENV == "DEPLOY"),
-      sameSite: (process.env.NODE_ENV == "DEPLOY")? 'None':'Lax',
-      domain: (process.env.NODE_ENV == "DEPLOY")? process.env.FRONT_URL.replace('https://', '') : undefined
+      sameSite: (process.env.NODE_ENV == "DEPLOY")? 'Strict':'Lax',
+    
     }
   }));
 
   app.use(
     cors({
-      origin: (process.env.NODE_ENV == "DEPLOY")? process.env.FRONT_URL :'*' ,
       credentials: true, // Access-Control-Allow-Credentials (cookies)
     })
   );
@@ -44,6 +43,15 @@ app.use(express.json());
 
 app.listen(3000,function(){
   console.log('Listening on', JSON.stringify(this.address(),null,2));
+});
+
+/////////////////////////////////////////////////////
+// SERVING CLIENT HERE
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+app.use(express.static("put_client_dist_inside/dist"));
+
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/put_client_dist_inside/dist/index.html");
 });
 
 /////////////////////////////////////////////////////
