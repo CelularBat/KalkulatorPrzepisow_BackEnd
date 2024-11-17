@@ -21,7 +21,7 @@ app.use(express.json());
     name: 'session-cookie',
     secret: 'my-secret-key',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: true, 
     cookie: {
       httpOnly: false,
       secure: (process.env.NODE_ENV == "DEPLOY"),
