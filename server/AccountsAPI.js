@@ -26,7 +26,7 @@ const AccountManagerSetup = (app, User) => {
       saveUninitialized: true,
       cookie: {
         secure: (process.env.NODE_ENV == "DEPLOY"),
-        sameSite: 'Lax'
+        sameSite: (process.env.NODE_ENV == "DEPLOY")? 'None':'Lax'
       }
     }));
 
