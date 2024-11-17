@@ -43,6 +43,7 @@ app.use(express.json());
 
 app.listen(3000,function(){
   console.log('Listening on', JSON.stringify(this.address(),null,2));
+  console.log("index.js exists in:", __dirname ,"  ",__filename)
 });
 
 /////////////////////////////////////////////////////
