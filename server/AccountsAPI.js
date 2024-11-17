@@ -32,7 +32,7 @@ const AccountManagerSetup = (app, User) => {
 
     app.use(
       cors({
-        origin: '*', 
+        origin: 'https://incandescent-dragon-cfc869.netlify.app', 
         credentials: true, // Allow credentials (cookies)
       })
     );
