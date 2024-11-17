@@ -27,7 +27,7 @@ const AccountManagerSetup = (app, User) => {
       cookie: {
         secure: (process.env.NODE_ENV == "DEPLOY"),
         sameSite: (process.env.NODE_ENV == "DEPLOY")? 'None':'Lax',
-        domain: (process.env.NODE_ENV == "DEPLOY")? process.env.FRONT_URL : 'localhost'
+        domain: (process.env.NODE_ENV == "DEPLOY")? process.env.FRONT_URL.replace('https://', '') : undefined
       }
     }));
 
