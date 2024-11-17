@@ -49,10 +49,10 @@ app.listen(3000,function(){
 /////////////////////////////////////////////////////
 // SERVING CLIENT HERE
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-app.use(express.static("put_client_dist_inside/dist"));
+app.use(express.static("CLIENT_dist"));
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/put_client_dist_inside/dist/index.html");
+  res.sendFile(__dirname + "/CLIENT_dist/index.html");
 });
 
 /////////////////////////////////////////////////////
