@@ -126,6 +126,7 @@ function FoodAPI_Setup(app,Food) {
       if (!u) {
         u = c_UnregisteredAccountName;
       } 
+      log.debug(`user ${u} requested public products`);
       Food.find({author:{$ne: u},public:{$ne: false} },(err,products)=>{
         if (err) {
           log.error(err);

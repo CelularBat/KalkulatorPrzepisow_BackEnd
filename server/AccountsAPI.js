@@ -88,7 +88,6 @@ const AccountManagerSetup = (app, User) => {
           }
 
           log.info(`user ${data.username} succesfully created`);
-
           done(`User ${data.username} succesfully created`,1);
         });
       }
@@ -184,14 +183,14 @@ const AccountManagerSetup = (app, User) => {
         });
         return;
       }
-      addUser(login, pass, (msg, result) => {
-        if (result.status){
+      addUser(login, pass, (msg, status) => {
+        if (status){
           req.session.userId = login;
           log.info(`New user registered: ${login}` )
         }
         res.json({
           msg: msg,
-          status: result
+          status: status
         });
       });
     });

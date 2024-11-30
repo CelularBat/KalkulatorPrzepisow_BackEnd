@@ -23,28 +23,28 @@ const Logger = (() => {
     function debug(...args) {
       if (currentLevel <= LEVELS.DEBUG) {
         const msg = `DEBUG: ${getCallerName()}:`;
-        console.log(msg, ...args);
+        console.log(getCurrentTime(),msg, ...args);
       }
     }
   
     function info(...args) {
       if (currentLevel <= LEVELS.INFO) {
         const msg = `INFO: ${getCallerName()}:`;
-        console.log(msg, ...args);
+        console.log(getCurrentTime(),msg, ...args);
       }
     }
   
     function warn(...args) {
       if (currentLevel <= LEVELS.WARN) {
         const msg = `WARN: ${getCallerName()}:`;
-        console.warn(msg, ...args);
+        console.warn(getCurrentTime(),msg, ...args);
       }
     }
   
     function error(...args) {
       if (currentLevel <= LEVELS.ERROR) {
         const msg = `ERROR: ${getCallerName()}:`;
-        console.error(msg, ...args);
+        console.error(getCurrentTime(),msg, ...args);
       }
     }
   
@@ -59,8 +59,16 @@ const Logger = (() => {
         return "Unknown";
       }
     }
+
+    function getCurrentTime() {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0'); 
+      const minutes = now.getMinutes().toString().padStart(2, '0'); 
+      const seconds = now.getSeconds().toString().padStart(2, '0'); 
   
-    // Return the available logging methods
+      return ( hours + ":" + minutes + ":" +  seconds + " " );
+  }
+  
     return { debug, info, warn, error };
   })();
   
