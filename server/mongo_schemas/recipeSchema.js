@@ -45,20 +45,26 @@ recipeSchema.pre('save', async function (next) {
     let input_photo_list = this.photos;
     let filtered_photo_list = [];
     let promise_array = [];
+
     for (let idx in input_photo_list) {
-        let promiseResult = verifyIfImg(input_photo_list[idx])
-            .then((resolved) => {
+        let promise = verifyIfImg(input_photo_list[idx])
+        .then((resolved) => {
                 if (resolved) {
                     filtered_photo_list.push(input_photo_list[idx]);
+                    log.debug("image added:" ,input_photo_list[idx])
                 }
                 else {
                     log.warn(`${input_photo_list[idx]} is not an image!`);
                 }
-                promise_array.push(promiseResult); // because we dont want rejected promises in array
-            }, (rejected) => {
+            
+            }, 
+            (rejected) => {
                 log.error(rejected);
-            }
-            );
+        })
+        .catch((error) => {
+            log.error(`Error verifying image URL: ${input_photo_list[idx]}`, error);
+        });
+        promise_array.push(promise); 
 
     }
     // wait till all promises in the loop got resolved

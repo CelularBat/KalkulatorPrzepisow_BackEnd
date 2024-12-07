@@ -36,7 +36,7 @@ function RecipeAPI_Setup(app,Recipe){
   
     function UpdateRecipe(targetId,newData,user,done) {
     
-    Food.findOneAndUpdate({ _id: targetId, author: user },newData, (err,data)=>{
+    Recipe.findOneAndUpdate({ _id: targetId, author: user },newData, (err,data)=>{
         if (err) {
           log.error( err.message);
           done(err.message,0);
@@ -66,7 +66,7 @@ function RecipeAPI_Setup(app,Recipe){
   //
   function RemoveRecipe(target,user,done) {
     
-    Food.findOneAndRemove({ _id: target._id, author: user }, (err,data)=>{
+    Recipe.findOneAndRemove({ _id: target._id, author: user }, (err,data)=>{
         if (err) {
           log.error(err.message);
           done(err.message,0);
