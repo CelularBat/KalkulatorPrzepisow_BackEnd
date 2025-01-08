@@ -1,7 +1,8 @@
 
 # Kalkulator przepisów
 Repozytoria:
-[Frontend](https://github.com/CelularBat/KalkulatorPrzepisow_Frontend)  [Backend](https://github.com/CelularBat/KalkulatorPrzepisow_BackEnd)
+[Frontend](https://github.com/CelularBat/KalkulatorPrzepisow_Frontend) 
+[Backend](https://github.com/CelularBat/KalkulatorPrzepisow_BackEnd)
 
 Społecznościowa aplikacja webowa do dzielenia się przepisami o ściśle wyliczonej wartości odżywczej, liczonej automatycznie. Projekt ma ułatwiać wspłódzielenie pomysłów na przepisy w restrykcyjnych dietach, takich jak dieta ketogeniczna, dieta wegańska niskowęglowodanowa ,czy inne wymagające diety eliminacyjne.
 ### Podgląd:
