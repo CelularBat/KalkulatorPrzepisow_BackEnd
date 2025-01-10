@@ -78,6 +78,29 @@ recipeSchema.pre('find', function() {
     this.populate('productsList.product');
 });
 
+//flatten the productList.product key inside the results
+/* Probably not the best practice here. But I lost too many time on this.
+    We created shallow copy of internal item._doc ,because otherwise we were unable to assign new object to productList
+
+*/
+recipeSchema.post('find',function(res){
+    const newRes = res.map( item => {
+        //console.log("before transformation",item);
+        const newProductList = item.productsList.map ((product) => { 
+            return {
+                portion: product.portion,
+                ...product.product.toObject()
+            }
+        }) 
+        const newItem = {...item._doc}
+        delete newItem.productsList;
+        newItem.productsList = [...newProductList];
+        //console.log("after transformation",newItem);
+        return newItem;   
+    })
+    return mongoose.overwriteMiddlewareResult(newRes);
+})
+
 
 const Recipe = mongoose.model("Recipe", recipeSchema);
 module.exports = { recipeSchema,Recipe }

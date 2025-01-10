@@ -6,8 +6,8 @@ function HelperAPI_Setup(app) {
         .then( (res) => {
         if (!res.ok) {
             throw new Error("Network did not respond!");
-        }
-            const contentType = response.headers.get('Content-Type');
+        }   
+            const contentType = res.headers.get('Content-Type');
             return contentType && contentType.startsWith('image');
         })
         .catch( err=> {
