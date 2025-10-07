@@ -2,9 +2,9 @@ const bcrypt = require('bcrypt') ;
 const session = require('express-session');
 const log = require('../Logger');
 
-/* Responce to client:
-{s
-  msg: "info message" // ( with error or with normal msg)
+/* Response to client:
+{
+  msg: "info message" 
   status: <0=error  1=sucess>
 }
 

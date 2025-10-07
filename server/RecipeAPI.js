@@ -100,7 +100,7 @@ function RecipeAPI_Setup(app,Recipe){
             log.error(err);
             res.json({msg: "Error", status:0}); 
           } else {
-            res.json(user_recipes);    
+            res.json({msg:user_recipes ,status: 1});    
           }    
         });  
       });
@@ -110,12 +110,12 @@ function RecipeAPI_Setup(app,Recipe){
         if (!u) {
           u = c_UnregisteredAccountName;
         } 
-        Recipe.find({author:{$ne: u},public:{$ne: false} },(err,products)=>{
+        Recipe.find({author:{$ne: u},public:{$ne: false} },(err,pub_recipes)=>{
           if (err) {
             log.error(err);
             res.json({msg: "Error", status:0}); 
           } else {
-            res.json(products);    
+            res.json({msg:pub_recipes ,status: 1});    
           }    
         });  
       });

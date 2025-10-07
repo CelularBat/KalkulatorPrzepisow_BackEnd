@@ -26,7 +26,7 @@ app.use(express.json());
       httpOnly: false,
       secure: (process.env.NODE_ENV == "DEPLOY"),
       sameSite: (process.env.NODE_ENV == "DEPLOY")? 'Strict':'Lax',
-    
+      maxAge: 1000 * 60 * 60 * 24 * 7,
     }
   }));
 
@@ -90,7 +90,7 @@ HelperAPI_Setup(app);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 adm = require("./AdminTools");
 //adm.importFoodFromFile(Food,'baza.txt',"baza","ogólne");
- //adm.PrintAllExcept(Recipe,{} );
+ adm.PrintAllExcept(Recipe,{} );
  //adm.AddLackingKeysToModel(Food,"salt");
 //adm.FindAndReplaceAllDocs(Food,{author: ['test','baza']},'brand','podstawowa','ogólne');
 //adm.RemoveAllExcept(Food,{author:['NIEZALOG','adam']});

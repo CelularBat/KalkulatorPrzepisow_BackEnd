@@ -16,7 +16,9 @@ const recipeSchema = new mongoose.Schema({
             ref: 'Food', 
             required: true
         },
-        portion : { type: Number, required: true }
+        portion : { type: Number, required: true, 
+            min: [0.1, 'Portion must be greater than 0'] 
+        }
     }],
     photos: [mongoose.SchemaTypes.Url],
     author: { type: String, default: c_UnregisteredAccountName },
@@ -87,10 +89,20 @@ recipeSchema.post('find',function(res){
     const newRes = res.map( item => {
         //console.log("before transformation",item);
         const newProductList = item.productsList.map ((product) => { 
-            return {
-                portion: product.portion,
-                ...product.product.toObject()
+            if ( product.product){
+                return {
+                    portion: product.portion,
+                    ...product.product?.toObject() // secures the case if product is missing
+                }
             }
+            else { 
+                log.error("Product from recipe doesn't exist!");
+                return {
+                    portion: product.portion,
+                    name: 'DELETED PRODUCT'
+                };
+            }
+            
         }) 
         const newItem = {...item._doc}
         delete newItem.productsList;

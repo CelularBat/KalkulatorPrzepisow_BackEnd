@@ -116,7 +116,7 @@ function FoodAPI_Setup(app,Food) {
           log.error(err);
           res.json({msg: "Error", status:0}); 
         } else {
-          res.json(user_products);    
+          res.json({msg:user_products ,status:1});    
         }    
       });  
     });
@@ -127,12 +127,12 @@ function FoodAPI_Setup(app,Food) {
         u = c_UnregisteredAccountName;
       } 
       log.debug(`user ${u} requested public products`);
-      Food.find({author:{$ne: u},public:{$ne: false} },(err,products)=>{
+      Food.find({author:{$ne: u},public:{$ne: false} },(err,pub_products)=>{
         if (err) {
           log.error(err);
           res.json({msg: "Error", status:0}); 
         } else {
-          res.json(products);    
+          res.json({msg:pub_products ,status:1});    
         }    
       });  
     });
