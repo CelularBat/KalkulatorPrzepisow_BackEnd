@@ -1,11 +1,9 @@
-const log = require('../Logger');
-const {c_UnregisteredAccountName} = require('./config');
+const log = require('../../Logger');
+const {c_UnregisteredAccountName} = require('../config');
 
 
 function RecipeAPI_Setup(app,Recipe){
 
-    
-  
   function AddRecipe(recipe,done) {
     let r = new Recipe(recipe);
     r.save((err,data)=>{
@@ -18,6 +16,35 @@ function RecipeAPI_Setup(app,Recipe){
         }   
     });
   }
+
+  function RemoveRecipe(target,user,done) {
+    Recipe.findOneAndRemove({ _id: target._id, author: user }, (err,data)=>{
+        if (err) {
+          log.error(err.message);
+          done(err.message,0);
+        } 
+        else if (data) {
+            
+            done(`Recipe ${data['name']} was removed`,1)
+        }   
+        else {
+          done(`Recipe ${target['name']} of user ${user} not found`,0);
+        }
+    });
+  }
+
+  function UpdateRecipe(targetId,newData,user,done) {
+    Recipe.findOneAndUpdate({ _id: targetId, author: user },newData, (err,data)=>{
+        if (err) {
+          log.error( err.message);
+          done(err.message,0);
+        } else {
+          (data)?
+            done(`Recipe ${newData['name']} was updated`,1)
+            :done(`RecipeID: ${targetId} (${newData.name}) of user ${user} not found`,0);
+        }   
+    })
+  };
   
   
   app.post("/api/addrecipe",(req,res)=>{
@@ -34,21 +61,6 @@ function RecipeAPI_Setup(app,Recipe){
         });
     });
   
-    function UpdateRecipe(targetId,newData,user,done) {
-    
-    Recipe.findOneAndUpdate({ _id: targetId, author: user },newData, (err,data)=>{
-        if (err) {
-          log.error( err.message);
-          done(err.message,0);
-        } else {
-          (data)?
-            done(`Recipe ${newData['name']} was updated`,1)
-            :done(`RecipeID: ${targetId} (${newData.name}) of user ${user} not found`,0);
-        }   
-    })
-  };
-
-  
     app.post("/api/updaterecipe",(req,res)=>{
       let p =req.body;
       let u = req.session.userId;
@@ -64,21 +76,9 @@ function RecipeAPI_Setup(app,Recipe){
     });
   
   //
-  function RemoveRecipe(target,user,done) {
-    
-    Recipe.findOneAndRemove({ _id: target._id, author: user }, (err,data)=>{
-        if (err) {
-          log.error(err.message);
-          done(err.message,0);
-        } else {
-          (data)?
-            done(`Recipe ${data['name']} was removed`,1)
-            :done(`Recipe ${target['name']} of user ${user} not found`,0);
-        }   
-    });
-  }
+
   
-  app.post("/api/removerecipe",(req,res)=>{
+    app.post("/api/removerecipe",(req,res)=>{
       let target =req.body;
       let u = req.session.userId;
       if (!u) {

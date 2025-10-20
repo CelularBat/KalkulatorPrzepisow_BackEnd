@@ -1,5 +1,7 @@
-const log = require('../Logger');
-const {c_UnregisteredAccountName} = require('./config');
+const log = require('../../Logger');
+const {c_UnregisteredAccountName} = require('../config');
+const { Recipe } = require("../mongo_schemas/recipeSchema");
+
 
 /* Responce to client:
 {
@@ -28,7 +30,6 @@ function FoodAPI_Setup(app,Food) {
   };
   
   function UpdateProduct(targetId,newData,user,done) {
-    
     log.debug("updating",targetId,user);
     Food.findOneAndUpdate( { _id: targetId, author: user } ,newData, (err,data)=>{
         if (err) {
@@ -44,18 +45,42 @@ function FoodAPI_Setup(app,Food) {
   };
   
   function RemoveProduct(target,user,done) {
-
     log.debug("removing",target,user);
-    Food.findOneAndRemove({ _id: target._id, author: user }, (err,data)=>{
-        if (err) {
-          log.error(err);
-          done(err.message,0);
-        } else {
-          (data)?
-            done(`${data.name} was removed`,1)
-            :done(`${target.name} ${target.brand}of user ${user} not found`,0);
-        }   
-    });
+
+    Recipe.findOne({"productsList.product":target._id},(err, result)=>{
+      if (err) {
+        log.error(err);
+        done(err.message, 0);
+        return;
+      }
+
+      if (result){ // Product exists in recipe - soft deleting
+        Food.findOneAndUpdate({ _id: target._id, author: user } ,{ _isDeleted: true }, (err,data)=>{
+          if (err) {
+            log.error(err);
+            done(err.message,0);
+          } else {
+            (data)?
+              done(`${data.name} was updated`,1)
+              :done(`ProductID: ${target._id} (${newData.name}) of user ${user} not found`,0);
+          }   
+        })
+
+      }
+      else { // Hard remove
+        Food.findOneAndRemove({ _id: target._id, author: user }, (err,data)=>{
+          if (err) {
+            log.error(err);
+            done(err.message,0);
+          } else {
+            (data)?
+              done(`${data.name} was removed`,1)
+              :done(`${target.name} ${target.brand}of user ${user} not found`,0);
+          }   
+        });
+      }
+
+    })
   }
   
   app.post("/api/addp",(req,res)=>{
@@ -67,9 +92,6 @@ function FoodAPI_Setup(app,Food) {
         p.author = c_UnregisteredAccountName;
       }
       
-      if (! p.public) {
-        p.public = false; //dirty fix for stupid checkboxes submiting nothing when unchecked
-      }
       AddProduct(p,(msg,status)=>{
         res.json({msg: msg, status:status});
       });
@@ -80,9 +102,6 @@ function FoodAPI_Setup(app,Food) {
       let u = req.session.userId;
       if (!u) {
         u = c_UnregisteredAccountName;
-      }
-      if (! p.public) {
-        p.public = false; //dirty fix for stupid checkboxes submiting nothing when unchecked
       }
 
       let targetId = p._id;

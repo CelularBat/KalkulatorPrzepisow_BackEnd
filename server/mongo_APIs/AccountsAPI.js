@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt') ;
 const session = require('express-session');
-const log = require('../Logger');
+const log = require('../../Logger');
 
 /* Response to client:
 {

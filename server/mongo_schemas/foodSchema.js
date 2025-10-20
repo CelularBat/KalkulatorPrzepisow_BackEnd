@@ -4,6 +4,11 @@ const mongoose = require("mongoose");
 const { productPortionSchema } = require("./productPortionSchema");
 require('mongoose-type-url');
 
+
+
+const MAX_STRING_LEN = 30;
+const MAX_NUMBER = 5000;
+
 const foodSchema = new mongoose.Schema({
     name: {type:String, required:true},
     brand: String,
@@ -18,49 +23,41 @@ const foodSchema = new mongoose.Schema({
     salt: {type:Number, required:false, default:null},
     fiber: {type:Number, required:false, default:null},
     public: {type:Boolean, default:true},
-    link: mongoose.SchemaTypes.Url
+    link: mongoose.SchemaTypes.Url,
+
+    _isDeleted: {type:Boolean, default:false} // flag for soft-deleting product if it is used in recipe
   });
   
 foodSchema.index({name:1, brand:1},{unique:1}); // makes brand + name combination unique.
 
 
-
-function SanitizeFoodStr(str) {
-  return str.slice(0, 30).replace(/[^a-zA-Z0-9\s\-_+\(\)ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g, '');
+function _sanitizeFoodStr(str) {
+  return str.slice(0, MAX_STRING_LEN).replace(/[^a-zA-Z0-9\s\-_+\(\)ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g, '');
 }
   
-// TO DO: make one func instead of 2
 
+function sanitizeFoodDoc(document,_this){
+  if (document){
+    log.debug("before:",document);
+      _this.schema.eachPath(function(path,type){
+          if (type instanceof mongoose.Schema.Types.String && (document[path]) ) {
+            document[path] = _sanitizeFoodStr(document[path]);      
+          } else if ((type instanceof mongoose.Schema.Types.Number && (document[path]) )) {
+            document[path] = Math.min(Math.abs(document[path]),MAX_NUMBER);
+          } 
+      });
+      log.debug("after:",document);
+  }
+}
 function sanitizeFoodDoc_save(next){ 
     let document = this;
-    if (document){
-      log.debug("before:",document);
-        
-        this.schema.eachPath(function(path,type){
-            if (type instanceof mongoose.Schema.Types.String && (document[path]) ) {
-            document[path] = SanitizeFoodStr(document[path]);      
-            } else if ((type instanceof mongoose.Schema.Types.Number && (document[path]) )) {
-            document[path] = Math.min(Math.abs(document[path]),5000);
-            } 
-        });
-        log.debug("after:",document);
-    }
+    sanitizeFoodDoc(document,this)
     next();
 }
 
 function sanitizeFoodDoc_update(next){ 
     let document = this._update;
-    if (document){
-        log.debug("before:",document);
-        this.schema.eachPath(function(path,type){
-        if (type instanceof mongoose.Schema.Types.String && (document[path]) ) {
-          document[path] = SanitizeFoodStr(document[path]);      
-        } else if ((type instanceof mongoose.Schema.Types.Number && (document[path]) )) {
-          document[path] = Math.min(Math.abs(document[path]),5000);
-        } 
-      });
-      log.debug("after",document);
-    }
+    sanitizeFoodDoc(document,this)
     next();
 }
 

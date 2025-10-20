@@ -80,25 +80,34 @@ recipeSchema.pre('find', function() {
     this.populate('productsList.product');
 });
 
-//flatten the productList.product key inside the results
-/* Probably not the best practice here. But I lost too many time on this.
-    We created shallow copy of internal item._doc ,because otherwise we were unable to assign new object to productList
+/* Flattens the productList.ingridient key inside the results
+Probably not the best practice here. But I lost too many time on this.
+    {   product: {name: '', brand:'' ...}
+        portion: 10;
+    } 
 
+        into:
+
+    {   name: '',
+        brand: '',
+        ...
+        portion: 10
+    }
 */
 recipeSchema.post('find',function(res){
     const newRes = res.map( item => {
-        //console.log("before transformation",item);
-        const newProductList = item.productsList.map ((product) => { 
-            if ( product.product){
+        log.debug("before transformation",item);
+        const newProductList = item.productsList.map ((ingridient) => { 
+            if ( ingridient.product){
                 return {
-                    portion: product.portion,
-                    ...product.product?.toObject() // secures the case if product is missing
+                    portion: ingridient.portion,
+                    ...ingridient.product?.toObject() 
                 }
             }
-            else { 
+            else {  // secures the case if product is missing
                 log.error("Product from recipe doesn't exist!");
                 return {
-                    portion: product.portion,
+                    portion: ingridient.portion,
                     name: 'DELETED PRODUCT'
                 };
             }
@@ -107,7 +116,7 @@ recipeSchema.post('find',function(res){
         const newItem = {...item._doc}
         delete newItem.productsList;
         newItem.productsList = [...newProductList];
-        //console.log("after transformation",newItem);
+        log.debug("after transformation",newItem);
         return newItem;   
     })
     return mongoose.overwriteMiddlewareResult(newRes);

@@ -1,4 +1,4 @@
-const log = require('../Logger');
+const log = require('../../Logger');
 function HelperAPI_Setup(app) {
 
     async function verifyIfImg(url) {
