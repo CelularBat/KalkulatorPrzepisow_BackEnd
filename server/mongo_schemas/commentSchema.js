@@ -13,7 +13,8 @@ const commentSchema = new mongoose.Schema({
     },
     createdAt: {
         type: Date,
-        required: true
+        required: true,
+        default: Date.now
     },
     text:{
         type: String,
@@ -22,7 +23,11 @@ const commentSchema = new mongoose.Schema({
     responseTo: {
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Comment'
-    }
+    },
+    _isDeleted: {
+        type:Boolean,
+        default:false
+    } 
   });
 
 

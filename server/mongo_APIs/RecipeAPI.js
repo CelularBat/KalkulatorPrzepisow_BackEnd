@@ -49,12 +49,8 @@ function RecipeAPI_Setup(app,Recipe){
   
   app.post("/api/addrecipe",(req,res)=>{
       let rec = req.body;
-      let u = req.session.userId;
-      if (u) {
-        rec.author = u; 
-      } else {  //we are doubling author.default key here, but anyway
-        rec.author = c_UnregisteredAccountName;
-      }      
+      let u = req.session.userId || c_UnregisteredAccountName;
+      rec.author = u;     
  
       AddRecipe(rec,(msg,status)=>{
         res.json({msg: msg, status:status});
@@ -63,10 +59,8 @@ function RecipeAPI_Setup(app,Recipe){
   
     app.post("/api/updaterecipe",(req,res)=>{
       let p =req.body;
-      let u = req.session.userId;
-      if (!u) {
-        u = c_UnregisteredAccountName;
-      }
+      let u = req.session.userId || c_UnregisteredAccountName;
+
       let targetId = p._id;
       delete p._id;
       delete p.__v; 
@@ -80,20 +74,16 @@ function RecipeAPI_Setup(app,Recipe){
   
     app.post("/api/removerecipe",(req,res)=>{
       let target =req.body;
-      let u = req.session.userId;
-      if (!u) {
-        u = c_UnregisteredAccountName;
-      }   
+      let u = req.session.userId || c_UnregisteredAccountName;
+
       RemoveRecipe(target,u,(msg,status)=>{
           res.json({msg: msg, status:status}); 
         })
     });
 
     app.get("/api/getuserr",(req,res)=>{
-        let u = req.session.userId;
-        if (!u) {
-          u = c_UnregisteredAccountName;
-        }
+        let u = req.session.userId || c_UnregisteredAccountName;
+
         log.debug(`user ${u} requested user recipes`);
         Recipe.find({author:u},(err,user_recipes)=>{
           if (err) {
@@ -106,10 +96,8 @@ function RecipeAPI_Setup(app,Recipe){
       });
     
     app.get("/api/getpubr",(req,res)=>{
-        let u = req.session.userId;
-        if (!u) {
-          u = c_UnregisteredAccountName;
-        } 
+        let u = req.session.userId || c_UnregisteredAccountName;
+        
         Recipe.find({author:{$ne: u},public:{$ne: false} },(err,pub_recipes)=>{
           if (err) {
             log.error(err);

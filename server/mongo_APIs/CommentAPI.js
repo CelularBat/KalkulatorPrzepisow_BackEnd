@@ -1,0 +1,139 @@
+const log = require('../../Logger');
+const {c_UnregisteredAccountName} = require('../config');
+const { Comment } = require("../mongo_schemas/commentSchema");
+
+function CommentAPI_Setup(app){
+
+    function AddComment(comment,done){
+        let c = new Comment(comment);
+        c.save( (err,data)=>{
+            if (err) {
+                log.error(err);
+                done(err.message,0);
+            } 
+            else {
+                log.info('Added Comment');
+                done(`Comment added`,1);
+            }  
+        })
+    }
+
+    function UpdateComment(targetId,newData,user,done) {
+        log.debug("updating comment ",targetId,user);
+        Comment.findOneAndUpdate( { _id: targetId, author: user } ,newData, (err,data)=>{
+            if (err) {
+              log.error(err);
+              done(err.message,0);
+            } 
+            else {
+              (data)?
+                done(`Comment was updated`,1)
+                :done(`Comment Id: ${targetId} of user ${user} not found`,0);
+            }   
+        })
+    
+    };
+
+    function RemoveComment(targetId,user,done) {
+    log.debug("removing comment ",targetId,user);
+
+    Comment.findOne({_id: targetId, author: user },(err, result)=>{
+      if (err) {
+        log.error(err);
+        done(err.message, 0);
+        return;
+      }
+
+      if (result.responseTo){ // If it's an answer to another comment - soft delete
+        Comment.findOneAndUpdate({_id: targetId, author: user  } ,{ _isDeleted: true, text: "Comment deleted" }, (err,data)=>{
+          if (err) {
+            log.error(err);
+            done(err.message,0);
+          } 
+          else {
+            (data)?
+              done(`Comment was soft removed`,1)
+              :done(`Comment Id: ${targetId} of user ${user} not found`,0);
+          }   
+        })
+
+      }
+      else { // Hard remove
+        Comment.findOneAndRemove({ _id: targetId, author: user }, (err,data)=>{
+          if (err) {
+            log.error(err);
+            done(err.message,0);
+          } 
+          else {
+            (data)?
+              done(`Comment was removed`,1)
+              :done(`Comment Id: ${targetId} of user ${user} not found`,0);
+          }   
+        });
+      }
+
+    })
+  }
+
+    app.post("/api/addcomment", (req, res) => {
+    const c = req.body;
+    const u = req.session.userId || c_UnregisteredAccountName;
+    c.author = u;
+
+    AddComment(c, (msg, status) => {
+      res.json({ msg, status });
+    });
+  });
+
+  app.post("/api/updatecomment", (req, res) => {
+    const c = req.body;
+    const u = req.session.userId || c_UnregisteredAccountName;
+    const targetId = c._id;
+    delete c._id;
+    delete c.__v;
+
+    UpdateComment(targetId, c, u, (msg, status) => {
+      res.json({ msg, status });
+    });
+  });
+
+  app.post("/api/removecomment", (req, res) => {
+    const targetId = req.body._id;
+    const u = req.session.userId || c_UnregisteredAccountName;
+
+    RemoveComment(targetId, u, (msg, status) => {
+      res.json({ msg, status });
+    });
+  });
+
+  app.get("/api/getrecipecomments", (req, res) => {
+  const recipeId = req.query.recipeId;
+  if (!recipeId) {
+    res.json({ msg: "Missing recipeId", status: 0 });
+    return;
+  }
+
+  log.debug(`requesting comments for recipe ${recipeId}`);
+
+  Comment.find({ recipe: recipeId })
+    .sort({ createdAt: 1 })
+    .exec((err, comments) => {
+      if (err) {
+        log.error(err);
+        res.json({ msg: "Error", status: 0 });
+      } else {
+        res.json({ msg: comments, status: 1 });
+      }
+    });
+});
+
+
+
+
+
+
+
+
+}
+
+module.exports = {CommentAPI_Setup};
