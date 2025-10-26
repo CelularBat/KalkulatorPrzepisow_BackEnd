@@ -73,7 +73,7 @@ app.listen(3000,function(){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.use(express.static("CLIENT_dist"));
 
-app.get("/", (req, res) => {
+app.get("*", (req, res) => {
   res.sendFile(__dirname + "/CLIENT_dist/index.html");
 });
 
