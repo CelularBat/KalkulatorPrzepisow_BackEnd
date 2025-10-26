@@ -14,29 +14,44 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(express.json());
 
-  //////////////////////////////////
-  // Session setup  
-  //////////////////////////////////
-  app.use(session({
-    name: 'session-cookie',
-    secret: 'my-secret-key',
-    resave: false,
-    saveUninitialized: true, 
-    cookie: {
-      httpOnly: false,
-      secure: (process.env.NODE_ENV == "DEPLOY"),
-      sameSite: (process.env.NODE_ENV == "DEPLOY")? 'Strict':'Lax',
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-    }
-  }));
+//////////////////////////////////
+// Security
+//////////////////////////////////
 
-  app.use(
-    cors({
-      credentials: true, // Access-Control-Allow-Credentials (cookies)
-    })
-  );
+const rateLimit = require('express-rate-limit');
 
-  app.set('trust proxy', 1);
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 100 // limit each IP to 100 requests per windowMs
+});
+app.use('/api/', limiter);
+
+const helmet = require('helmet');
+app.use(helmet());
+
+//////////////////////////////////
+// Session setup  
+//////////////////////////////////
+app.use(session({
+  name: 'session-cookie',
+  secret: 'my-secret-key',
+  resave: false,
+  saveUninitialized: true, 
+  cookie: {
+    httpOnly: false,
+    secure: (process.env.NODE_ENV == "DEPLOY"),
+    sameSite: (process.env.NODE_ENV == "DEPLOY")? 'Strict':'Lax',
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+  }
+}));
+
+app.use(
+  cors({
+    credentials: true, // Access-Control-Allow-Credentials (cookies)
+  })
+);
+
+app.set('trust proxy', 1);
 ////////////////////////////////////////////////////////////////////////
 
 
