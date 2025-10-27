@@ -1,8 +1,8 @@
 const log = require('../../Logger');
 const {c_UnregisteredAccountName} = require('../config');
-const { Comment } = require("../mongo_schemas/commentSchema");
 
-function CommentAPI_Setup(app){
+
+function CommentAPI_Setup(app,Comment){
 
     function AddComment(comment,done){
         let c = new Comment(comment);
@@ -106,26 +106,46 @@ function CommentAPI_Setup(app){
     });
   });
 
-  app.get("/api/getrecipecomments", (req, res) => {
-  const recipeId = req.query.recipeId;
-  if (!recipeId) {
-    res.json({ msg: "Missing recipeId", status: 0 });
-    return;
-  }
+  app.post("/api/getrecipecomments", (req, res) => {
+    const { recipeId } = req.body;
+    if (!recipeId) {
+      res.json({ msg: "Missing recipeId", status: 0 });
+      return;
+    }
+  
+    log.debug(`requesting comments for recipe ${recipeId}`);
+  
+    Comment.find({ recipe: recipeId })
+      .sort({ createdAt: 1 })
+      .exec((err, comments) => {
+        if (err) {
+          log.error(err);
+          res.json({ msg: "Error", status: 0 });
+        } else {
+          res.json({ msg: comments, status: 1 });
+        }
+      });
+  });
 
-  log.debug(`requesting comments for recipe ${recipeId}`);
+  app.post("/api/getrecipecommentscount", (req, res) => {
+    const { recipeId } = req.body;
+    if (!recipeId) {
+        res.json({ msg: "Missing recipeId", status: 0 });
+        return;
+    }
 
-  Comment.find({ recipe: recipeId })
-    .sort({ createdAt: 1 })
-    .exec((err, comments) => {
-      if (err) {
-        log.error(err);
-        res.json({ msg: "Error", status: 0 });
-      } else {
-        res.json({ msg: comments, status: 1 });
-      }
+    log.debug(`requesting comment count for recipe ${recipeId}`);
+
+    Comment.countDocuments({ recipe: recipeId }, (err, count) => {
+        if (err) {
+            log.error(err);
+            res.json({ msg: "Error", status: 0 });
+        } else {
+            res.json({ msg: count, status: 1 });
+        }
     });
 });
+
 
 
 

@@ -34,9 +34,9 @@ const commentSchema = new mongoose.Schema({
   const MAX_TEXT_LEN = 1000;
 
   function _sanitizeText(str) {
-    return str
+    return str 
       .slice(0, MAX_TEXT_LEN)
-      .replace(/[^a-zA-Z0-9\s\p{L}\p{N}\.,!?:;"'()\-\–—ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/gu, '');
+      .replace(/[^a-zA-Z0-9\s\.,!?:;"'()\-\–—ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g, '');
   }
 
   commentSchema.pre('save', function(next) {

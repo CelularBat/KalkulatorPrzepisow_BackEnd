@@ -31,7 +31,11 @@ const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 minutes
   max: 100 // limit each IP to 100 requests per windowMs
 });
-app.use('/api/', limiter);
+
+if (process.env.NODE_ENV == "DEPLOY"){ // only for production
+  app.use('/api/', limiter);
+}
+
 
 const helmet = require('helmet');
 app.use(helmet());

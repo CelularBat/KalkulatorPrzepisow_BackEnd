@@ -12,11 +12,12 @@ mongoose.connect(process.env.MONGO_URI, {
 // SCHEMAS
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const {userSchema,User} = require('./mongo_schemas/userSchema.js');
-const {foodSchema,Food} = require('./mongo_schemas/foodSchema.js');
-const {recipeSchema,Recipe} = require('./mongo_schemas/recipeSchema.js');
+const {User} = require('./mongo_schemas/userSchema.js');
+const {Food} = require('./mongo_schemas/foodSchema.js');
+const {Recipe} = require('./mongo_schemas/recipeSchema.js');
+const { Comment } = require("./mongo_schemas/commentSchema");
 
-const {productPortionSchema,Portion} = require('./mongo_schemas/productPortionSchema.js');
+const {Portion} = require('./mongo_schemas/productPortionSchema.js');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 // APIS
@@ -25,6 +26,7 @@ let { AccountManagerSetup  } = require("./mongo_APIs/AccountsAPI.js");
 let {FoodAPI_Setup} = require("./mongo_APIs/FoodAPI");
 let {RecipeAPI_Setup} = require("./mongo_APIs/RecipeAPI");
 let {HelperAPI_Setup} = require("./mongo_APIs/HelperAPI");
+let {CommentAPI_Setup} = require("./mongo_APIs/CommentAPI");
 
 
 
@@ -33,6 +35,7 @@ function Init_Mongoose(app_express){
   FoodAPI_Setup(app_express,Food);
   RecipeAPI_Setup(app_express,Recipe);
   HelperAPI_Setup(app_express);
+  CommentAPI_Setup(app_express,Comment);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////

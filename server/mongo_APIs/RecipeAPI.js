@@ -58,13 +58,13 @@ function RecipeAPI_Setup(app,Recipe){
     });
   
     app.post("/api/updaterecipe",(req,res)=>{
-      let p =req.body;
+      let rec =req.body;
       let u = req.session.userId || c_UnregisteredAccountName;
 
-      let targetId = p._id;
-      delete p._id;
-      delete p.__v; 
-      UpdateRecipe(targetId,p,u,(msg,status)=>{
+      let targetId = rec._id;
+      delete rec._id;
+      delete rec.__v; 
+      UpdateRecipe(targetId,rec,u,(msg,status)=>{
           res.json({msg: msg, status:status}); 
         })
     });
