@@ -14,14 +14,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(express.json());
 
-// obrazy z dowolnej domeny
-app.use((req, res, next) => {
-  res.setHeader(
-    "Content-Security-Policy",
-    "default-src 'self'; img-src 'self' https: data:;"
-  );
-  next();
-});
+
 
 
 
@@ -42,7 +35,19 @@ if (process.env.NODE_ENV == "DEPLOY"){ // only for production
 
 
 const helmet = require('helmet');
-app.use(helmet());
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"], //turn off external styles !!
+      imgSrc: ["'self'", "https:", "data:"], // imaes from external domains
+      fontSrc: ["'self'"], // turn off external fonts !!
+      objectSrc: ["'none'"],
+      
+    }
+  })
+);
 
 //////////////////////////////////
 // Session setup  
