@@ -16,9 +16,13 @@ app.use(express.json());
 
 // obrazy z dowolnej domeny
 app.use((req, res, next) => {
-  res.setHeader("Content-Security-Policy", "img-src *;");
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; img-src 'self' https: data:;"
+  );
   next();
 });
+
 
 
 //////////////////////////////////
