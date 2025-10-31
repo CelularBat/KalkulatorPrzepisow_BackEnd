@@ -1,6 +1,15 @@
 const log = require('../../Logger');
 const {c_UnregisteredAccountName} = require('../config');
 
+/* Responce to client:
+{
+  msg: "info message" // ( with error or with normal msg)
+  status: <0=error  1=sucess>
+}
+
+done callback:
+done(<msg>,<status>)
+*/
 
 function CommentAPI_Setup(app,Comment){
 
