@@ -124,7 +124,7 @@ function CommentAPI_Setup(app,Comment){
   
     log.debug(`requesting comments for recipe ${recipeId}`);
   
-    Comment.find({ recipe: recipeId })
+    Comment.find({ recipeId: recipeId })
       .sort({ createdAt: 1 })
       .exec((err, comments) => {
         if (err) {
@@ -145,7 +145,7 @@ function CommentAPI_Setup(app,Comment){
 
     log.debug(`requesting comment count for recipe ${recipeId}`);
 
-    Comment.countDocuments({ recipe: recipeId }, (err, count) => {
+    Comment.countDocuments({ recipeId: recipeId }, (err, count) => {
         if (err) {
             log.error(err);
             res.json({ msg: "Error", status: 0 });

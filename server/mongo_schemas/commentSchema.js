@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { c_UnregisteredAccountName } = require("../config");
 
 const commentSchema = new mongoose.Schema({
-    recipe:{
+    recipeId:{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Recipe', 
         required: true
