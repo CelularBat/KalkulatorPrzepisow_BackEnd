@@ -1,9 +1,11 @@
 const { c_UnregisteredAccountName } = require("../config");
 const log = require("../../Logger");
-const { Food} = require("./foodSchema");
+
 const mongoose = require("mongoose");
 
 require('mongoose-type-url');
+const {sanitizeShortText,sanitizeLongText} = require("./_sanitizers");
+const {verifyImageList} = require("./_verifyImageURL")
 
 
 
@@ -28,52 +30,42 @@ const recipeSchema = new mongoose.Schema({
 recipeSchema.set('autoIndex', false);
 
 
-// https://www.zhenghao.io/posts/verify-image-url
-async function verifyIfImg(url) {
-    return fetch(url, { method: 'HEAD' })
-        .then((res) => {
-            const isImage = res.headers.get('Content-Type').startsWith('image');
-            return isImage;
-        })
-        .catch((err) => {
-            log.error(err);
-            return false;
-        });
-}
-
-// Check if img url points to real image
-recipeSchema.pre('save', async function (next) {
-    log.debug("adding recipe",this);
-    let input_photo_list = this.photos;
-    let filtered_photo_list = [];
-    let promise_array = [];
-
-    for (let idx in input_photo_list) {
-        let promise = verifyIfImg(input_photo_list[idx])
-        .then((resolved) => {
-                if (resolved) {
-                    filtered_photo_list.push(input_photo_list[idx]);
-                    log.debug("image added:" ,input_photo_list[idx])
-                }
-                else {
-                    log.warn(`${input_photo_list[idx]} is not an image!`);
-                }
-            
-            }, 
-            (rejected) => {
-                log.error(rejected);
-        })
-        .catch((error) => {
-            log.error(`Error verifying image URL: ${input_photo_list[idx]}`, error);
-        });
-        promise_array.push(promise); 
-
+async function sanitizeRecipeDoc(document, _this) {
+    if (!document) return;
+  
+    if (document.name)
+      document.name = sanitizeShortText(document.name, 100);
+  
+    if (document.description)
+      document.description = sanitizeLongText(document.description, 2000);
+  
+    if (document.author)
+      document.author = sanitizeShortText(document.author, 100);
+  
+    if (document.photos && Array.isArray(document.photos)) {
+      document.photos = await verifyImageList(document.photos);
     }
-    // wait till all promises in the loop got resolved
-    await Promise.all(promise_array);
-    this.photos = filtered_photo_list;
+  
+    return document;
+  }
+  
+  async function sanitizeRecipeDoc_save(next) {
+    let document = this;
+    await sanitizeRecipeDoc(document, this);
     next();
-});
+  }
+  
+  async function sanitizeRecipeDoc_update(next) {
+    let document = this._update;
+    await sanitizeRecipeDoc(document, this);
+    next();
+  }
+  
+  recipeSchema.pre('save', sanitizeRecipeDoc_save);
+  recipeSchema.pre('updateOne', sanitizeRecipeDoc_update);
+  recipeSchema.pre('findOneAndUpdate', sanitizeRecipeDoc_update);
+
+
 
 
 // populate Food object inside productList when recipes list is called by API

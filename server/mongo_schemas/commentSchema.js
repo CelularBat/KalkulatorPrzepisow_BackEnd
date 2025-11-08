@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { c_UnregisteredAccountName } = require("../config");
+const {sanitizeLongText} = require("./_sanitizers")
 
 const commentSchema = new mongoose.Schema({
     recipeId:{
@@ -33,14 +34,9 @@ const commentSchema = new mongoose.Schema({
 
   const MAX_TEXT_LEN = 1000;
 
-  function _sanitizeText(str) {
-    return str 
-      .slice(0, MAX_TEXT_LEN)
-      .replace(/[^a-zA-Z0-9\s\.,!?:;"'()\-\–—ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g, '');
-  }
 
   commentSchema.pre('save', function(next) {
-    if (this.text) this.text = _sanitizeText(this.text);
+    if (this.text) this.text = sanitizeLongText(this.text , MAX_TEXT_LEN);
     next();
   });
 

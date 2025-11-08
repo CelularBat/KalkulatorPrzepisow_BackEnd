@@ -1,8 +1,9 @@
 const {c_UnregisteredAccountName} = require("../config");
 const log = require("../../Logger");
 const mongoose = require("mongoose");
-const { productPortionSchema } = require("./productPortionSchema");
+// const { productPortionSchema } = require("./productPortionSchema");
 require('mongoose-type-url');
+const {sanitizeShortText,sanitizeNumber} = require("./_sanitizers")
 
 
 
@@ -31,19 +32,15 @@ const foodSchema = new mongoose.Schema({
 foodSchema.index({name:1, brand:1},{unique:1}); // makes brand + name combination unique.
 
 
-function _sanitizeFoodStr(str) {
-  return str.slice(0, MAX_STRING_LEN).replace(/[^a-zA-Z0-9\s\-_+\(\)ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g, '');
-}
-  
 
 function sanitizeFoodDoc(document,_this){
   if (document){
     log.debug("before:",document);
       _this.schema.eachPath(function(path,type){
           if (type instanceof mongoose.Schema.Types.String && (document[path]) ) {
-            document[path] = _sanitizeFoodStr(document[path]);      
+            document[path] = sanitizeShortText(document[path], MAX_STRING_LEN);      
           } else if ((type instanceof mongoose.Schema.Types.Number && (document[path]) )) {
-            document[path] = Math.min(Math.abs(document[path]),MAX_NUMBER);
+            document[path] = sanitizeNumber(document[path],MAX_NUMBER);
           } 
       });
       log.debug("after:",document);
