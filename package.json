@@ -1,7 +1,7 @@
 {
   "name": "kalkulator_recept_api",
   "author": "CelularBat",
-  "description": "Kalkulator Recept API",
+  "description": "Kalkulator Przepisow API",
   "keywords": [
     "nothing",
     "here"
@@ -14,6 +14,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.16.4",
+    "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^8.1.0",
     "express-session": "^1.17.3",
     "helmet": "^8.1.0",

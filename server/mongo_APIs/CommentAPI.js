@@ -43,46 +43,60 @@ function CommentAPI_Setup(app,Comment){
     
     };
 
-    function RemoveComment(targetId,user,done) {
-    log.debug("removing comment ",targetId,user);
-
-    Comment.findOne({_id: targetId, author: user },(err, result)=>{
-      if (err) {
-        log.error(err);
-        done(err.message, 0);
-        return;
-      }
-
-      if (result.responseTo){ // If it's an answer to another comment - soft delete
-        Comment.findOneAndUpdate({_id: targetId, author: user  } ,{ _isDeleted: true, text: "Comment deleted" }, (err,data)=>{
+    function RemoveComment(targetId, user, done) {
+      log.debug("removing comment", targetId, user);
+  
+      Comment.findOne({ _id: targetId, author: user }, async (err, result) => {
           if (err) {
-            log.error(err);
-            done(err.message,0);
-          } 
-          else {
-            (data)?
-              done(`Comment was soft removed`,1)
-              :done(`Comment Id: ${targetId} of user ${user} not found`,0);
-          }   
-        })
-
-      }
-      else { // Hard remove
-        Comment.findOneAndRemove({ _id: targetId, author: user }, (err,data)=>{
-          if (err) {
-            log.error(err);
-            done(err.message,0);
-          } 
-          else {
-            (data)?
-              done(`Comment was removed`,1)
-              :done(`Comment Id: ${targetId} of user ${user} not found`,0);
-          }   
-        });
-      }
-
-    })
+              log.error(err);
+              done(err.message, 0);
+              return;
+          }
+  
+          if (!result) {
+              done(`Comment Id: ${targetId} of user ${user} not found`, 0);
+              return;
+          }
+  
+          try {
+              const hasReplies = await Comment.exists({ responseTo: targetId, _isDeleted: false });
+  
+              if (hasReplies) {
+                  // Soft delete
+                  Comment.findOneAndUpdate(
+                      { _id: targetId, author: user },
+                      { _isDeleted: true, text: "Comment deleted" },
+                      (err, data) => {
+                          if (err) {
+                              log.error(err);
+                              done(err.message, 0);
+                          } else {
+                              data
+                                  ? done(`Comment was soft removed (has replies)`, 1)
+                                  : done(`Comment Id: ${targetId} of user ${user} not found`, 0);
+                          }
+                      }
+                  );
+              } else {
+                  // Hard delete
+                  Comment.findOneAndRemove({ _id: targetId, author: user }, (err, data) => {
+                      if (err) {
+                          log.error(err);
+                          done(err.message, 0);
+                      } else {
+                          data
+                              ? done(`Comment was removed`, 1)
+                              : done(`Comment Id: ${targetId} of user ${user} not found`, 0);
+                      }
+                  });
+              }
+          } catch (checkErr) {
+              log.error(checkErr);
+              done(checkErr.message, 0);
+          }
+      });
   }
+  
 
     app.post("/api/addcomment", (req, res) => {
     const c = req.body;

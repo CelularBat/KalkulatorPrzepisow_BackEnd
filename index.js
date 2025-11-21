@@ -22,6 +22,7 @@ app.use(express.json());
 // Security
 //////////////////////////////////
 
+// Rate limiter
 const rateLimit = require('express-rate-limit');
 
 const limiter = rateLimit({
@@ -33,8 +34,8 @@ if (process.env.NODE_ENV == "DEPLOY"){ // only for production
   app.use('/api/', limiter);
 }
 
-
-const helmet = require('helmet');
+// HTTP Header
+const helmet = require('helmet'); 
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
@@ -48,6 +49,18 @@ app.use(
     }
   })
 );
+
+// Mongo keys sanitizer
+const mongoSanitize = require('express-mongo-sanitize');
+
+app.use(
+  mongoSanitize({
+    onSanitize: ({ req, key }) => {
+      console.warn(`This request[${key}] is sanitized`, req);
+    },
+  }),
+);
+
 
 //////////////////////////////////
 // Session setup  
@@ -102,6 +115,10 @@ app.get("*", (req, res) => {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ADMIN TOOLS
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+const {User} = require('./server/mongo_schemas/userSchema.js');
+const {Food} = require('./server/mongo_schemas/foodSchema.js');
+const {Recipe} = require('./server/mongo_schemas/recipeSchema.js');
+const { Comment } = require("./server/mongo_schemas/commentSchema");
 
 adm = require("./AdminTools");
 
@@ -110,5 +127,5 @@ adm = require("./AdminTools");
  //adm.AddLackingKeysToModel(Food,"salt");
 //adm.FindAndReplaceAllDocs(Food,{author: ['test','baza']},'brand','podstawowa','ogólne');
 //adm.RemoveAllExcept(Food,{author:['NIEZALOG','adam']});
-//adm.RemoveAllExcept(Recipe);
+//adm.RemoveAllExcept(Comment);
 
