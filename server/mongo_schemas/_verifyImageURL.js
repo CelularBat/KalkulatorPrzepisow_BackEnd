@@ -25,7 +25,7 @@ async function verifyImageList(photoList) {
         log.warn(`${url} is not an image!`);
       }
     } catch (err) {
-      log.error(`Error verifying image URL: ${url}`, err);
+      log.error(`Error verifying image URL: ${url}`, err); 
     }
   });
   await Promise.all(checks);
