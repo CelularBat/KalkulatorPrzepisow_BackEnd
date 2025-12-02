@@ -24,7 +24,7 @@ const foodSchema = new mongoose.Schema({
     salt: {type:Number, required:false, default:null},
     fiber: {type:Number, required:false, default:null},
     public: {type:Boolean, default:true},
-    link: mongoose.SchemaTypes.Url,
+    link: {type: mongoose.SchemaTypes.Url ,  required: false  }, 
 
     _isDeleted: {type:Boolean, default:false} // flag for soft-deleting product if it is used in recipe
   });
@@ -49,6 +49,7 @@ function sanitizeFoodDoc(document,_this){
 function sanitizeFoodDoc_save(next){ 
     let document = this;
     sanitizeFoodDoc(document,this)
+    log.debug(document)
     next();
 }
 

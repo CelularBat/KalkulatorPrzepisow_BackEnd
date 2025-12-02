@@ -197,12 +197,12 @@ const AccountManagerSetup = (app, User) => {
 
     app.get("/api/islogged",(req,res)=>{
       let u = req.session.userId;
-      console.log("Cookies from client:", req.headers.cookie);
-      log.debug(u);
-      const isLogged = u?true:false;
+      log.debug("Cookies from client:", req.headers.cookie , u);
+      const isLogged = u ? true : false;
       res.json({
         isLogged: isLogged,
-        userName: u
+        userName: u,
+        status: 1
       });
       
     });

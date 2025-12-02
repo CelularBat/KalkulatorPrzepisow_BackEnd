@@ -120,8 +120,10 @@ const {Food} = require('./server/mongo_schemas/foodSchema.js');
 const {Recipe} = require('./server/mongo_schemas/recipeSchema.js');
 const { Comment } = require("./server/mongo_schemas/commentSchema");
 
+/** @type {import('./AdminTools')} */
 adm = require("./AdminTools");
 
+//adm.PrintAllMatching(Food,{author:'NIEZALOG'})
 //adm.importFoodFromFile(Food,'baza.txt',"baza","ogólne");
  //adm.PrintAllExcept(Recipe,{} );
  //adm.AddLackingKeysToModel(Food,"salt");

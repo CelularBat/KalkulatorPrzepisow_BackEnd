@@ -1,5 +1,6 @@
 const log = require('../../Logger');
 const {c_UnregisteredAccountName} = require('../config');
+const {sanitizeInternalKeys} = require("../mongo_schemas/_sanitizers.js")
 
 /* Responce to client:
 {
@@ -14,6 +15,7 @@ done(<msg>,<status>)
 function CommentAPI_Setup(app,Comment){
 
     function AddComment(comment,done){
+      sanitizeInternalKeys(comment,false);
         let c = new Comment(comment);
         c.save( (err,data)=>{
             if (err) {
@@ -28,6 +30,7 @@ function CommentAPI_Setup(app,Comment){
     }
 
     function UpdateComment(targetId,newData,user,done) {
+        sanitizeInternalKeys(newData,true);
         log.debug("updating comment ",targetId,user);
         Comment.findOneAndUpdate( { _id: targetId, author: user } ,newData, (err,data)=>{
             if (err) {

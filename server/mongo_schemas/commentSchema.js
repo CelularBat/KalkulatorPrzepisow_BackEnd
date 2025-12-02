@@ -34,11 +34,22 @@ const commentSchema = new mongoose.Schema({
 
   const MAX_TEXT_LEN = 1000;
 
-
-  commentSchema.pre('save', function(next) {
-    if (this.text) this.text = sanitizeLongText(this.text , MAX_TEXT_LEN);
+  function sanitizeCommentDoc_save(next){ 
+    let document = this;
+    if (document.text) document.text = sanitizeLongText(document.text , MAX_TEXT_LEN);
     next();
-  });
+}
+
+function sanitizeCommentDoc_update(next){ 
+    let document = this._update;
+    if (document.text) document.text = sanitizeLongText(document.text , MAX_TEXT_LEN);
+    next();
+}
+
+
+  commentSchema.pre('save', sanitizeCommentDoc_save);
+  commentSchema.pre('updateOne', sanitizeCommentDoc_update);
+  commentSchema.pre('findOneAndUpdate', sanitizeCommentDoc_update);
 
 
   const Comment = mongoose.model("Comment", commentSchema);

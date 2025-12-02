@@ -24,7 +24,8 @@ const recipeSchema = new mongoose.Schema({
     }],
     photos: [mongoose.SchemaTypes.Url],
     author: { type: String, default: c_UnregisteredAccountName },
-    public: { type: Boolean, default: true }
+    public: { type: Boolean, default: true },
+    createdAt: { type: Date,required: true,default: Date.now },
 });
 
 recipeSchema.set('autoIndex', false);

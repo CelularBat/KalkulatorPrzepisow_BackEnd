@@ -19,7 +19,7 @@
     "express-session": "^1.17.3",
     "helmet": "^8.1.0",
     "mongoose": "^6.13.5",
-    "mongoose-type-url": "^2.1.0"
+    "mongoose-type-url": "^1.0.4"
   },
   "main": "index.js",
   "scripts": {
@@ -28,6 +28,8 @@
     "deploy": " nodemon index.js"
   },
   "devDependencies": {
-    "nodemon": "^3.0.3"
+    "@types/node": "^24.10.1",
+    "nodemon": "^3.0.3",
+    "typescript": "^5.9.3"
   }
 }
