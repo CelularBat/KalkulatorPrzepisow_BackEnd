@@ -58,7 +58,9 @@ async function sanitizeRecipeDoc(document, _this) {
   
   async function sanitizeRecipeDoc_update(next) {
     let document = this._update;
+    log.debug(document);
     await sanitizeRecipeDoc(document, this);
+    log.debug(document);
     next();
   }
   
@@ -90,7 +92,7 @@ Probably not the best practice here. But I lost too many time on this.
 */
 recipeSchema.post('find',function(res){
     const newRes = res.map( item => {
-        log.debug("before transformation",item);
+        //log.debug("before transformation",item);
         const newProductList = item.productsList.map ((ingridient) => { 
             if ( ingridient.product){
                 return {
@@ -110,7 +112,7 @@ recipeSchema.post('find',function(res){
         const newItem = {...item._doc}
         delete newItem.productsList;
         newItem.productsList = [...newProductList];
-        log.debug("after transformation",newItem);
+        //log.debug("after transformation",newItem);
         return newItem;   
     })
     return mongoose.overwriteMiddlewareResult(newRes);

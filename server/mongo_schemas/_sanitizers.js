@@ -4,7 +4,7 @@ function sanitizeShortText(str, MAX_LENGTH = 30) {
     if (!str) return '';
     return str
       .slice(0, MAX_LENGTH)
-      .replace(/[^a-zA-Z0-9\s_\-\+\(\)\[\]ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g, '');
+      .replace(/[^a-zA-Z0-9\s_\-\+\(\)\[\]ąćęłńóśźżĄĆĘŁŃÓŚŹŻ,]/g, '');
   }
   
   function sanitizeLongText(str, MAX_LENGTH = 1000) {
@@ -12,10 +12,10 @@ function sanitizeShortText(str, MAX_LENGTH = 30) {
     return str
       .slice(0, MAX_LENGTH)
       .replace(/\./g, '．')  // U+FF0E fullwidth full stop
-      .replace(/,/g, '，')   // U+FF0C fullwidth comma
+      .replace(/,/g, '‚')   // U+FF0C fullwidth comma
       .replace(/\$/g, '＄')  // U+FF04 fullwidth dollar sign
       .replace(/&/g, '＆')   // U+FF06 fullwidth ampersand
-      .replace(/[^a-zA-Z0-9\s,\.!?:;"'\(\)\-\–—\[\]\/=\*\_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g, '');
+      .replace(/[^a-zA-Z0-9\s,\.!?:;"'\(\)\-\–—\[\]\/=\*\_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ．‚＄＆]/g, '');
   }
   
   function sanitizeNumber(num, MAX_NUMBER = 5000) {
